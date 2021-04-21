@@ -1,6 +1,17 @@
 # FacesAndFaces
 Facial recognition
 
+# Plans
+
+Add UnitOfWork
+Add Mappers
+Add FluentValidations 3 layers
+Apply DDD
+Apply CQRS
+Apply EventSourcing
+Refactory to clean code
+Create DOC and swagger with versioning
+
 docker pull mcr.microsoft.com/mssql/server:2019-latest
 
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Insecure!12345" `

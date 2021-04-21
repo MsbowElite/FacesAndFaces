@@ -46,7 +46,7 @@ namespace Faces.WebMvc.Controllers
 
             viewModel.ImageData = memoryStream.ToArray();
             viewModel.ImageUrl = viewModel.File.FileName;
-            viewModel.OrderId = Guid.NewGuid();
+            viewModel.Id = Guid.NewGuid();
 
             var sendToUri = new Uri($"{RabbitMqMassTransitConstants.RabbitMquri}" +
                 $"{RabbitMqMassTransitConstants.RegisterOrderCommandQueue}");
@@ -55,13 +55,13 @@ namespace Faces.WebMvc.Controllers
             await endPoint.Send<IRegisterOrderCommand>(
                 new
                 {
-                    viewModel.OrderId,
+                    viewModel.Id,
                     viewModel.UserEmail,
                     viewModel.ImageData,
                     viewModel.ImageUrl
                 });
 
-            ViewData["OrderId"] = viewModel.OrderId;
+            ViewData["OrderId"] = viewModel.Id;
             return View("RegisterOrderResult");
         }
 
