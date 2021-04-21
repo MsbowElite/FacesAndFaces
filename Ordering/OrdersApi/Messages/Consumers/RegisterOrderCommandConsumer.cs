@@ -27,7 +27,7 @@ namespace OrdersApi.Messages.Consumers
 
         private void SaveOrder(IRegisterOrderCommand result)
         {
-            Order order = new Order
+            Order order = new()
             {
                 Id = result.Id,
                 UserEmail = result.UserEmail,

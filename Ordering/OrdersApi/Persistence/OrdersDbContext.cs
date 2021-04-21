@@ -33,10 +33,6 @@ namespace OrdersApi.Persistence
 
                 entity.Property(e => e.PictureUrl).HasMaxLength(400);
 
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
                 entity.Property(e => e.UserEmail).HasMaxLength(150);
             });
 

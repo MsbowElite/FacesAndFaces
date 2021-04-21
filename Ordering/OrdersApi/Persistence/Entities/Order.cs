@@ -16,7 +16,6 @@ namespace OrdersApi.Persistence.Entities
         public string PictureUrl { get; set; }
         public byte[] ImageData { get; set; }
         public string UserEmail { get; set; }
-        public string Status { get; set; }
 
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }

@@ -15,6 +15,7 @@ using OrdersApi.Persistence.Repositories.Interfaces;
 using OrdersApi.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -42,27 +43,25 @@ namespace OrdersApi
             services.AddTransient<IOrderRepository, OrderRepository>();
 
             services.AddMassTransit(
-                c => 
+                c =>
                 {
                     c.AddConsumer<RegisterOrderCommandConsumer>();
                 });
 
             services.AddSingleton(provider => Bus.Factory.CreateUsingRabbitMq(
-                cfg =>
+                config =>
                 {
-                    cfg.Host("localhost", "/", h =>
+                    config.Host("localhost", "/", h =>
                     {
                         h.Username("guest");
                         h.Password("guest");
                     });
 
-                    cfg.ReceiveEndpoint(RabbitMqMassTransitConstants.RegisterOrderCommandQueue, e =>
+                    config.ReceiveEndpoint(RabbitMqMassTransitConstants.RegisterOrderCommandQueue, e =>
                     {
                         e.PrefetchCount = 16;
                         e.Consumer<RegisterOrderCommandConsumer>(provider);
                     });
-
-                    cfg.ConfigureEndpoints((IBusRegistrationContext)provider);
                 }));
             services.AddSingleton<IHostedService, BusService>();
 
