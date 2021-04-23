@@ -11,6 +11,8 @@ Apply CQRS
 Apply EventSourcing
 Refactory to clean code
 Create DOC and swagger with versioning
+Organize AppServicies and Servicies
+Encapsulate Successful and unsuccessful responses
 
 docker pull mcr.microsoft.com/mssql/server:2019-latest
 

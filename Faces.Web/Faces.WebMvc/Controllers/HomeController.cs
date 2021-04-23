@@ -45,7 +45,7 @@ namespace Faces.WebMvc.Controllers
             await uploadedFile.CopyToAsync(memoryStream);
 
             viewModel.ImageData = memoryStream.ToArray();
-            viewModel.ImageUrl = viewModel.File.FileName;
+            viewModel.PictureUrl = viewModel.File.FileName;
             viewModel.Id = Guid.NewGuid();
 
             var sendToUri = new Uri($"{RabbitMqMassTransitConstants.RabbitMquri}" +
@@ -58,7 +58,7 @@ namespace Faces.WebMvc.Controllers
                     viewModel.Id,
                     viewModel.UserEmail,
                     viewModel.ImageData,
-                    viewModel.ImageUrl
+                    viewModel.PictureUrl
                 });
 
             ViewData["OrderId"] = viewModel.Id;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OrdersApi.Models
+namespace OrdersApi.DTOs
 {
-    public class OrderDetail
+    public class OrderDetailDTO
     {
         public int Id { get; set; }
         public Guid OrderId { get; set; }

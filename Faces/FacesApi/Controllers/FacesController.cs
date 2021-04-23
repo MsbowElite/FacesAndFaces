@@ -11,8 +11,7 @@ namespace FacesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FacesController : ControllerBase
-    {
+    public class FacesController : ControllerBase    {
         [HttpPost]
         public async Task<Tuple<List<byte[]>, Guid>> ReadFaces(Guid orderId)
         {

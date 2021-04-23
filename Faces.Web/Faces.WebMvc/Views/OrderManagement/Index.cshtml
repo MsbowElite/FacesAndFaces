@@ -1,0 +1,30 @@
+﻿@model List<Faces.WebMvc.ViewModels.OrderViewModel>
+
+@{
+    ViewData["Title"] = "Orders List";
+}
+
+<h3> Orders Management List </h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order Id</th>
+            <th>User Email</th>
+            <th>Image</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr class="clickable" onclick="location.href='@Url.Action("Details", "OrderManagement",
+                                                      new { orderId = order.Id })'">
+
+                <td>@order.Id</td>
+                <td>@order.UserEmail</td>
+                <td><img src="@order.ImageString" width="50" height="50"></td>
+                <td>@order.StatusString</td>
+            </tr>
+        }
+    </tbody>
+</table>

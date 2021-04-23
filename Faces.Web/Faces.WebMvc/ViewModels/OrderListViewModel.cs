@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Faces.WebMvc.ViewModels
 {
-    public class OrderViewModel
+    public class OrderListViewModel
     {
         [Display(Name = "Order Id")]
         public Guid Id { get; set; }
@@ -16,14 +15,13 @@ namespace Faces.WebMvc.ViewModels
         [Display(Name = "Image File")]
         public IFormFile File { get; set; }
 
-        [Display(Name = "PictureUrl")]
-        public string PictureUrl { get; set; }
+        [Display(Name = "ImageUrl")]
+        public string ImageUrl { get; set; }
 
         [Display(Name = "Order Status")]
         public string StatusString { get; set; }
 
         public byte[] ImageData { get; set; }
-        public string ImageString { get; set; }
-        public List<OrderDetailViewModel> OrderDetails { get; set; }
+        public byte[] ImageString { get; set; }
     }
 }

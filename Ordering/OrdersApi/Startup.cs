@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OrdersApi.AutoMappers;
 using OrdersApi.Messages.Consumers;
 using OrdersApi.Persistence;
 using OrdersApi.Persistence.Repositories;
@@ -65,6 +66,17 @@ namespace OrdersApi
                 }));
             services.AddSingleton<IHostedService, BusService>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .SetIsOriginAllowed((host) => true)
+                        .AllowCredentials());
+            });
+
+            services.AddAutoMapperConfiguration();
             services.AddControllers();
         }
 
@@ -75,6 +87,8 @@ namespace OrdersApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 

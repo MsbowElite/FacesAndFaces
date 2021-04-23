@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Faces", "Faces", "{96839B3E-F137-4742-A821-3BA2715C5A7D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FaceDetection", "FaceDetection", "{96839B3E-F137-4742-A821-3BA2715C5A7D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FacesApi", "Faces\FacesApi\FacesApi.csproj", "{50C1567A-8307-4DBC-A3C5-D9EA6A511B71}"
 EndProject
@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Faces.WebMvc", "Faces.Web\F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ordering", "Ordering", "{16E32FCC-E1C0-46BE-BB72-83FEFFC6897F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrdersApi", "Ordering\OrdersApi\OrdersApi.csproj", "{307057A1-A3D2-4A94-8CB2-631D3C4DF3FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrdersApi", "Ordering\OrdersApi\OrdersApi.csproj", "{307057A1-A3D2-4A94-8CB2-631D3C4DF3FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C9F31C6-6C05-4A79-B712-F5DFEBFC3D67}"
 	ProjectSection(SolutionItems) = preProject
