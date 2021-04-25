@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FaceApiTest
 {
@@ -13,7 +8,7 @@ namespace FaceApiTest
     {
         public byte[] ConvertToBytes(string imagePath)
         {
-            MemoryStream memoryStream = new ();
+            MemoryStream memoryStream = new();
             using FileStream fileStream = new(imagePath, FileMode.Open);
 
             fileStream.CopyTo(memoryStream);

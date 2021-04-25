@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -26,9 +25,9 @@ namespace FaceApiTest
             var apiResponse = await response.Content.ReadAsStringAsync();
             faceList = JsonSerializer.Deserialize<List<byte[]>>(apiResponse);
 
-            if(faceList is not null)
+            if (faceList is not null)
             {
-                for(int i=0; i<faceList.Count; i++)
+                for (int i = 0; i < faceList.Count; i++)
                 {
                     imageUtility.FromBytesToImage(faceList[i], "face" + i);
                 }

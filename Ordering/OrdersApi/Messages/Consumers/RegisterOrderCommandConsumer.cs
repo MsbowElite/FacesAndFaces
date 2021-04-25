@@ -6,8 +6,6 @@ using OrdersApi.Persistence.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OrdersApi.Messages.Consumers
@@ -37,7 +35,8 @@ namespace OrdersApi.Messages.Consumers
                 var orderId = orderDetailData.Item2;
 
                 await SaveOrderDetailsAsync(orderId, faces);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
 
             }
@@ -58,9 +57,9 @@ namespace OrdersApi.Messages.Consumers
         {
             var order = await _orderRepository.GetOrderAsync(orderId);
 
-            if(order is not null)
+            if (order is not null)
             {
-                foreach(var face in faces)
+                foreach (var face in faces)
                 {
                     var orderDetail = new OrderDetail
                     {

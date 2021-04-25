@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Refit;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -27,12 +26,12 @@ namespace Faces.WebMvc.RestClients
         {
             try
             {
-            return await _restClient.GetOrderById(orderId);
+                return await _restClient.GetOrderById(orderId);
 
             }
-            catch(ApiException ex)
+            catch (ApiException ex)
             {
-                if(ex.StatusCode is HttpStatusCode.NotFound)
+                if (ex.StatusCode is HttpStatusCode.NotFound)
                 {
                     return null;
                 }

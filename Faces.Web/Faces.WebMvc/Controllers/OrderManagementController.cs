@@ -1,8 +1,6 @@
 ﻿using Faces.WebMvc.RestClients;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Faces.WebMvc.Controllers
@@ -21,7 +19,7 @@ namespace Faces.WebMvc.Controllers
         {
             var orders = await _orderManagementApi.GetOrders();
 
-            foreach(var order in orders)
+            foreach (var order in orders)
             {
                 order.ImageString = ConvertAndFormatToString(order.ImageData);
             }

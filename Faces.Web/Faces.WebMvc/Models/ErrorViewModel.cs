@@ -1,5 +1,3 @@
-using System;
-
 namespace Faces.WebMvc.Models
 {
     public class ErrorViewModel

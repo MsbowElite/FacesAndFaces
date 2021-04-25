@@ -1,13 +1,12 @@
+using GreenPipes;
 using MassTransit;
 using Messaging.InterfacesConstants.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using OrdersApi.AutoMappers;
 using OrdersApi.Messages.Consumers;
 using OrdersApi.Persistence;
@@ -15,10 +14,6 @@ using OrdersApi.Persistence.Repositories;
 using OrdersApi.Persistence.Repositories.Interfaces;
 using OrdersApi.Services;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OrdersApi
 {
@@ -36,7 +31,7 @@ namespace OrdersApi
         {
             services.AddDbContext<OrdersDbContext>(optionsAction => optionsAction.UseSqlServer
             (
-                Configuration.GetConnectionString("OrdersContextConnection")   
+                Configuration.GetConnectionString("OrdersContextConnection")
             ));
 
             services.AddHttpClient();
@@ -47,6 +42,7 @@ namespace OrdersApi
                 c =>
                 {
                     c.AddConsumer<RegisterOrderCommandConsumer>();
+                    c.AddConsumer<OrderDispatchedEventConsumer>();
                 });
 
             services.AddSingleton(provider => Bus.Factory.CreateUsingRabbitMq(
@@ -61,7 +57,15 @@ namespace OrdersApi
                     config.ReceiveEndpoint(RabbitMqMassTransitConstants.RegisterOrderCommandQueue, e =>
                     {
                         e.PrefetchCount = 16;
+                        e.UseMessageRetry(x => x.Interval(2, TimeSpan.FromSeconds(10)));
                         e.Consumer<RegisterOrderCommandConsumer>(provider);
+                    });
+
+                    config.ReceiveEndpoint(RabbitMqMassTransitConstants.OrderDispatchedServiceQueue, e =>
+                    {
+                        e.PrefetchCount = 16;
+                        e.UseMessageRetry(x => x.Interval(2, TimeSpan.FromSeconds(10)));
+                        e.Consumer<OrderDispatchedEventConsumer>(provider);
                     });
                 }));
             services.AddSingleton<IHostedService, BusService>();

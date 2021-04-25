@@ -3,7 +3,6 @@ using OrdersApi.Persistence.Entities;
 using OrdersApi.Persistence.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OrdersApi.Persistence.Repositories

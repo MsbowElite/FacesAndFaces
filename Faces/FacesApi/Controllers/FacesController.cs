@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FacesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FacesController : ControllerBase    {
+    public class FacesController : ControllerBase
+    {
         [HttpPost]
         public async Task<Tuple<List<byte[]>, Guid>> ReadFaces(Guid orderId)
         {
@@ -20,7 +19,7 @@ namespace FacesApi.Controllers
             await Request.Body.CopyToAsync(ms);
             var faces = GetFaces(ms.ToArray());
 
-            return new Tuple<List<byte[]>, Guid> (faces, orderId);
+            return new Tuple<List<byte[]>, Guid>(faces, orderId);
         }
 
         private static List<byte[]> GetFaces(byte[] image)
@@ -37,7 +36,7 @@ namespace FacesApi.Controllers
             var faceList = new List<byte[]>();
             int j = 0;
 
-            foreach(var rect in faces)
+            foreach (var rect in faces)
             {
                 var faceImage = new Mat(src, rect);
                 faceList.Add(faceImage.ToBytes(".jpg"));
