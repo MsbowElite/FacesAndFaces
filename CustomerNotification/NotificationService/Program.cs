@@ -17,8 +17,7 @@ namespace NotificationService
     {
         public static async Task Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-
+            await CreateHostBuilder(args).Build().RunAsync();
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args)
@@ -36,7 +35,6 @@ namespace NotificationService
                     config.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json",
                         optional: false);
                 })
-
                 .ConfigureServices((hostContext, services) =>
                 {
                     var emailConfig = hostContext.Configuration

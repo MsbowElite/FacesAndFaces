@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Messaging.InterfacesConstants.Events;
+using OrdersApi.Enums;
 using OrdersApi.Persistence.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace OrdersApi.Messages.Consumers
             var order = await _orderRepository.GetOrderAsync(orderId);
             if (order != null)
             {
-                //order.Status = Status.Sent;
+                order.Status = Status.Sent.ToString();
                 _orderRepository.UpdateOrder(order);
             }
         }

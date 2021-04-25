@@ -24,17 +24,17 @@ namespace NotificationService.Consumers
         {
             var result = context.Message;
             var facesData = result.Faces;
-            
-            if(facesData.Count < 1)
+
+            if (facesData.Count < 1)
             {
                 await Console.Out.WriteLineAsync("No faces Detected");
             }
             else
             {
                 int j = 0;
-                foreach(var face in facesData)
+                foreach (var face in facesData)
                 {
-                    MemoryStream memoryStream = new MemoryStream(face);
+                    MemoryStream memoryStream = new(face);
                     var image = Image.FromStream(memoryStream);
                     image.Save(rootFolder + "/Images/face" + j + ".jpg", ImageFormat.Jpeg);
                 }
@@ -42,7 +42,7 @@ namespace NotificationService.Consumers
 
             string[] mailAddress = { result.UserEmail };
 
-            await _emailSender.SendEmailAsync(new Message(mailAddress, "your order" + 
+            await _emailSender.SendEmailAsync(new Message(mailAddress, "your order" +
                 result.Id, "From FacesAndFaces", facesData));
 
             await context.Publish<IOrderDispatchedEvent>(new

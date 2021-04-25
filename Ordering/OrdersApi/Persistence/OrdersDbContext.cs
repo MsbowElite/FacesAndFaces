@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using OrdersApi.Persistence.Entities;
 
 #nullable disable
@@ -30,6 +32,10 @@ namespace OrdersApi.Persistence
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.PictureUrl).HasMaxLength(400);
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.UserEmail).HasMaxLength(150);
             });

@@ -10,6 +10,7 @@ namespace OrdersApi.Results
         public string PictureUrl { get; set; }
         public byte[] ImageData { get; set; }
         public string UserEmail { get; set; }
+        public string Status { get; set; }
         public List<OrderDetailDTO> OrderDetails { get; set; }
     }
 }

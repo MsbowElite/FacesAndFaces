@@ -1,6 +1,8 @@
 ﻿using MassTransit;
 using Messaging.InterfacesConstants.Commands;
+using Messaging.InterfacesConstants.Events;
 using Newtonsoft.Json;
+using OrdersApi.Enums;
 using OrdersApi.Persistence.Entities;
 using OrdersApi.Persistence.Repositories.Interfaces;
 using System;
@@ -23,23 +25,24 @@ namespace OrdersApi.Messages.Consumers
 
         public async Task Consume(ConsumeContext<IRegisterOrderCommand> context)
         {
-            try
+            var result = context.Message;
+
+            SaveOrder(result);
+
+            var client = _httpClientFactory.CreateClient();
+            var orderDetailData = await GetFacesFromFaceApiAsync(client, result.ImageData, result.Id);
+            var faces = orderDetailData.Item1;
+            var orderId = orderDetailData.Item2;
+
+            await SaveOrderDetailsAsync(orderId, faces);
+
+            await context.Publish<IOrderProcessedEvent>(new
             {
-                var result = context.Message;
-
-                SaveOrder(result);
-
-                var client = _httpClientFactory.CreateClient();
-                var orderDetailData = await GetFacesFromFaceApiAsync(client, result.ImageData, result.Id);
-                var faces = orderDetailData.Item1;
-                var orderId = orderDetailData.Item2;
-
-                await SaveOrderDetailsAsync(orderId, faces);
-            }
-            catch (Exception ex)
-            {
-
-            }
+                Id = orderId,
+                result.UserEmail,
+                Faces = faces,
+                result.PictureUrl
+            });
         }
 
         private async Task<Tuple<List<byte[]>, Guid>> GetFacesFromFaceApiAsync(HttpClient client, byte[] imageData, Guid orderId)
@@ -81,7 +84,8 @@ namespace OrdersApi.Messages.Consumers
                 Id = result.Id,
                 UserEmail = result.UserEmail,
                 PictureUrl = result.PictureUrl,
-                ImageData = result.ImageData
+                ImageData = result.ImageData,
+                Status = Status.Registered.ToString()
             };
 
             _orderRepository.RegisterOrder(order);

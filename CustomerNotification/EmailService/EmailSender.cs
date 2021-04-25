@@ -11,6 +11,7 @@ namespace EmailService
     {
 
         private readonly EmailConfig _emailConfig;
+        private const string ImageExtension = "jpeg";
 
         public EmailSender(EmailConfig emailConfig)
         {
@@ -34,7 +35,7 @@ namespace EmailService
                 int i = 1;
                 foreach (var attachment in message.Attachments)
                 {
-                    bodyBuilder.Attachments.Add("attachment" + i, attachment);
+                    bodyBuilder.Attachments.Add(string.Format("face{0}.{1}", i, ImageExtension), attachment);
                     i++;
                 }
             }

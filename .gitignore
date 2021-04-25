@@ -354,3 +354,5 @@ MigrationBackup/
 /Faces/FacesApi/face2.jpg
 /Faces/FacesApi/face1.jpg
 /Faces/FacesApi/face0.jpg
+/CustomerNotification/NotificationService/appsettings.Production.json
+/CustomerNotification/NotificationService/Images
