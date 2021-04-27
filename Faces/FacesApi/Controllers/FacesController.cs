@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OpenCvSharp;
+﻿using FacesApi.Configurations;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.CognitiveServices.Vision.Face;
+using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,39 +15,67 @@ namespace FacesApi.Controllers
     [ApiController]
     public class FacesController : ControllerBase
     {
+        private readonly AzureFaceConfiguration _azureFaceConfiguration;
+
+        public FacesController(AzureFaceConfiguration azureFaceConfiguration)
+        {
+            _azureFaceConfiguration = azureFaceConfiguration;
+        }
+
         [HttpPost]
         public async Task<Tuple<List<byte[]>, Guid>> ReadFaces(Guid orderId)
         {
             using var ms = new MemoryStream(2048);
 
             await Request.Body.CopyToAsync(ms);
-            var faces = GetFaces(ms.ToArray());
+            var imageBytes = ms.ToArray();
+            Image image = Image.Load(imageBytes);
+            image.Save("dummy.jpg");
 
-            return new Tuple<List<byte[]>, Guid>(faces, orderId);
+            var facesCropped = await UploadAndDetectFaces(image, new MemoryStream(imageBytes));
+            return new Tuple<List<byte[]>, Guid>(facesCropped, orderId);
         }
 
-        private static List<byte[]> GetFaces(byte[] image)
+        public static IFaceClient Authenticate(string endpoint, string key)
         {
-            Mat src = Cv2.ImDecode(image, ImreadModes.Color);
+            return new FaceClient(new ApiKeyServiceClientCredentials(key)) { Endpoint = endpoint };
+        }
 
-            src.SaveImage("image.jpg", new ImageEncodingParam(ImwriteFlags.JpegProgressive, 255));
-            var file = Path.Combine(Directory.GetCurrentDirectory(), "CascadeFile", "haarcascade_frontalface_default.xml");
+        private async Task<List<byte[]>> UploadAndDetectFaces(Image image, MemoryStream imageStream)
+        {
+            string subKey = _azureFaceConfiguration.SubscriptionKey;
+            string endPoint = _azureFaceConfiguration.Endpoint;
 
-            var faceCascade = new CascadeClassifier();
-            faceCascade.Load(file);
-
-            var faces = faceCascade.DetectMultiScale(src, 1.1, 6, HaarDetectionTypes.DoRoughSearch, new Size(60, 60));
+            var client = Authenticate(endPoint, subKey);
             var faceList = new List<byte[]>();
-            int j = 0;
-
-            foreach (var rect in faces)
+            IList<DetectedFace> faces = null;
+            try
             {
-                var faceImage = new Mat(src, rect);
-                faceList.Add(faceImage.ToBytes(".jpg"));
-                faceImage.SaveImage("face" + j + ".jpg", new ImageEncodingParam(ImwriteFlags.JpegProgressive, 255));
-                j++;
+                faces = await client.Face.DetectWithStreamAsync(imageStream, true, false, null);
+                
+                int j = 0;
+                foreach (var face in faces)
+                {
+                    var s = new MemoryStream();
+                    var zoom = 1.0;
+                    int h = (int)(face.FaceRectangle.Height / zoom);
+                    int w = (int)(face.FaceRectangle.Width / zoom);
+                    int x = face.FaceRectangle.Left;
+                    int y = face.FaceRectangle.Top;
+
+                    image.Clone(ctx => ctx.Crop(new Rectangle(x, y, w, h))).Save("face" + j + ".jpg");
+                    image.Clone(ctx => ctx.Crop(new Rectangle(x, y, w, h))).SaveAsJpeg(s);
+                    faceList.Add(s.ToArray());
+
+                    j++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Out.WriteLine(ex.Message);
             }
             return faceList;
+
         }
     }
 }
