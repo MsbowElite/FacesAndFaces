@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OrdersApi.AutoMappers;
+using OrdersApi.Hubs;
 using OrdersApi.Messages.Consumers;
 using OrdersApi.Persistence;
 using OrdersApi.Persistence.Repositories;
@@ -33,6 +34,12 @@ namespace OrdersApi
             (
                 Configuration.GetConnectionString("OrdersContextConnection")
             ));
+
+            services.AddSignalR()
+                .AddJsonProtocol(options =>
+                {
+                    options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+                });
 
             services.AddHttpClient();
 
@@ -101,6 +108,7 @@ namespace OrdersApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<OrderHub>("/orderhub");
             });
         }
     }
