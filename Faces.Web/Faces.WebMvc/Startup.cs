@@ -1,3 +1,4 @@
+using Faces.WebMvc.Configurations;
 using Faces.WebMvc.RestClients;
 using Faces.WebMvc.Services;
 using MassTransit;
@@ -21,11 +22,13 @@ namespace Faces.WebMvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettings>(Configuration);
+
             services.AddMassTransit();
             services.AddSingleton(provider => Bus.Factory.CreateUsingRabbitMq(
                 cfg =>
                 {
-                    cfg.Host("localhost", "/", h =>
+                    cfg.Host("rabbitmq", "/", h =>
                     {
                         h.Username("guest");
                         h.Password("guest");

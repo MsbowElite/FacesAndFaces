@@ -358,3 +358,4 @@ MigrationBackup/
 /CustomerNotification/NotificationService/Images
 /Faces/FacesApi/appsettings.Development.json
 /Faces/FacesApi/dummy.jpg
+/Ordering/OrdersApi/appsettings.Development.json

@@ -29,16 +29,6 @@ namespace NotificationService.Consumers
             {
                 await Console.Out.WriteLineAsync("No faces Detected");
             }
-            else
-            {
-                int j = 0;
-                foreach (var face in facesData)
-                {
-                    MemoryStream memoryStream = new(face);
-                    var image = Image.FromStream(memoryStream);
-                    image.Save(rootFolder + "/Images/face" + j + ".jpg", ImageFormat.Jpeg);
-                }
-            }
 
             string[] mailAddress = { result.UserEmail };
 

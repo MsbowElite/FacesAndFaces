@@ -30,13 +30,17 @@
 
 
 </table>
+@using Microsoft.Extensions.Options
+@using Faces.WebMvc.Configurations
+@inject IOptions<AppSettings> options
+
 @section Scripts{
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script type="text/javascript">
 
         var timerId;
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl('http://localhost:6002/orderhub')
+            .withUrl('@options.Value.OrdersApiUrl/orderhub')
             .configureLogging(signalR.LogLevel.Debug)
             .withAutomaticReconnect()
             .build();

@@ -2,7 +2,9 @@
 using Messaging.InterfacesConstants.Commands;
 using Messaging.InterfacesConstants.Events;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using OrdersApi.Configurations;
 using OrdersApi.Enums;
 using OrdersApi.Hubs;
 using OrdersApi.Persistence.Entities;
@@ -19,12 +21,15 @@ namespace OrdersApi.Messages.Consumers
         private readonly IOrderRepository _orderRepository;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IHubContext<OrderHub> _orderHubContext;
+        private readonly IOptions<OrderSettings> _options;
 
-        public RegisterOrderCommandConsumer(IOrderRepository orderRepository, IHttpClientFactory httpClientFactory, IHubContext<OrderHub> orderHubContext)
+        public RegisterOrderCommandConsumer(IOrderRepository orderRepository, IHttpClientFactory httpClientFactory, 
+            IHubContext<OrderHub> orderHubContext, IOptions<OrderSettings> options)
         {
             _orderRepository = orderRepository;
             _httpClientFactory = httpClientFactory;
             _orderHubContext = orderHubContext;
+            _options = options;
         }
 
         public async Task Consume(ConsumeContext<IRegisterOrderCommand> context)
@@ -56,7 +61,8 @@ namespace OrdersApi.Messages.Consumers
         {
             var byteContent = new ByteArrayContent(imageData);
             byteContent.Headers.ContentType = new("application/octet-stream");
-            using var response = await client.PostAsync("http://localhost:6000/api/faces?orderId=" + orderId, byteContent);
+            using var response = await client.PostAsync(
+                string.Format("{0}{1}{2}", _options.Value.FacesApiUrl, "/api/faces?orderId=", orderId), byteContent);
 
             string apiResponse = await response.Content.ReadAsStringAsync();
 

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OrdersApi.AutoMappers;
+using OrdersApi.Configurations;
 using OrdersApi.Hubs;
 using OrdersApi.Messages.Consumers;
 using OrdersApi.Persistence;
@@ -30,6 +31,8 @@ namespace OrdersApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<OrderSettings>(Configuration);
+
             services.AddDbContext<OrdersDbContext>(optionsAction => optionsAction.UseSqlServer
             (
                 Configuration.GetConnectionString("OrdersContextConnection")
@@ -55,7 +58,7 @@ namespace OrdersApi
             services.AddSingleton(provider => Bus.Factory.CreateUsingRabbitMq(
                 config =>
                 {
-                    config.Host("localhost", "/", h =>
+                    config.Host("rabbitmq", "/", h =>
                     {
                         h.Username("guest");
                         h.Password("guest");

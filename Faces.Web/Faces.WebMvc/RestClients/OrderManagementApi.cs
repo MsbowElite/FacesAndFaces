@@ -1,5 +1,7 @@
-﻿using Faces.WebMvc.ViewModels;
+﻿using Faces.WebMvc.Configurations;
+using Faces.WebMvc.ViewModels;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -11,15 +13,15 @@ namespace Faces.WebMvc.RestClients
 {
     public class OrderManagementApi : IOrderManagementApi
     {
-        private IOrderManagementApi _restClient;
+        private readonly IOrderManagementApi _restClient;
+        private readonly IOptions<AppSettings> _options;
 
-        public OrderManagementApi(IConfiguration configuration, HttpClient httpClient)
+        public OrderManagementApi(HttpClient httpClient, IOptions<AppSettings> options)
         {
-            string apiHostAndPort = configuration.GetSection("ApiServiceLocations")
-                .GetValue<string>("OrdersApiLocation");
-            httpClient.BaseAddress = new($"http://{apiHostAndPort}/api");
+            httpClient.BaseAddress = new($"{options.Value.OrdersApiUrl}/api");
 
             _restClient = RestService.For<IOrderManagementApi>(httpClient);
+            _options = options;
         }
 
         public async Task<OrderViewModel> GetOrderById(Guid orderId)
