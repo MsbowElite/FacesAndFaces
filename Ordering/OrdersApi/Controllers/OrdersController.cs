@@ -23,7 +23,13 @@ namespace OrdersApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _orderRepository.GetOrdersAsync());
+            try
+            {
+                return Ok(await _orderRepository.GetOrdersAsync());
+            }catch(Exception ex)
+            {
+                return NotFound(ex);
+            }
         }
 
         [HttpGet]

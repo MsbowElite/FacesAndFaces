@@ -1,0 +1,60 @@
+version: '3.4'
+
+services:
+  api:
+    image: ${DOCKER_REGISTRY-}facesapi
+    container_name: faces.api
+    build:
+      context: .
+      dockerfile: Faces/FacesApi/Dockerfile
+
+
+  webmvc:
+    image: ${DOCKER_REGISTRY-}faceswebmvc
+    container_name: faces.webmvc
+    build:
+      context: .
+      dockerfile: Faces.Web/Faces.WebMvc/Dockerfile
+    depends_on:
+        - rabbitmq
+        - ordersapi
+
+
+  ordersapi:
+    image: ${DOCKER_REGISTRY-}ordersapi
+    container_name: faces.ordersapi
+    build:
+      context: .
+      dockerfile: Ordering/OrdersApi/Dockerfile
+    depends_on:
+        - rabbitmq
+        - api
+        - mssql
+
+
+  notificationservice:
+    image: ${DOCKER_REGISTRY-}notificationservice
+    container_name: faces.notificationservice
+    build:
+      context: .
+      dockerfile: CustomerNotification/NotificationService/Dockerfile
+    depends_on:
+        - rabbitmq
+
+
+  mssql:
+    image: msbowelite/faces.mssql
+    container_name: faces.mssql
+    ports:
+        - "1433:1433" 
+
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: faces.rabbitmq
+    ports:
+        - "15672:15672"
+        - "5672:5672"
+
+
+

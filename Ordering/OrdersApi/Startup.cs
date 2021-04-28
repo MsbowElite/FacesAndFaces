@@ -33,9 +33,11 @@ namespace OrdersApi
         {
             services.Configure<OrderSettings>(Configuration);
 
+            var lol = Configuration["OrdersContextConnection"];
+
             services.AddDbContext<OrdersDbContext>(optionsAction => optionsAction.UseSqlServer
             (
-                Configuration.GetConnectionString("OrdersContextConnection")
+                Configuration["OrdersContextConnection"]
             ));
 
             services.AddSignalR()

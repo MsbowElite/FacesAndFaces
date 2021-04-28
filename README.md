@@ -20,4 +20,7 @@ docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Insecure!12345" `
    -p 1433:1433 --name sql1 -h sql1 `
    -d mcr.microsoft.com/mssql/server:2019-latest
 
+   docker commit ace58 msbowelite/faces.mssql:1.0.0
+   docker push msbowelite/faces.mssql:1.0.0
+
 Scaffold-DbContext "Server=localhost;Database=FACEORDER;User Id=sa;password=Insecure!12345;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Persistence\Entities -ContextDir Persistence -Context OrdersDbContext -Force

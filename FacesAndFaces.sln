@@ -28,9 +28,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomerNotification", "CustomerNotification", "{423D7293-32AC-4342-B3E6-6B7BE71686E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "CustomerNotification\NotificationService\NotificationService.csproj", "{3E34F0FE-F1D5-4218-88E4-989579C679F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService", "CustomerNotification\NotificationService\NotificationService.csproj", "{3E34F0FE-F1D5-4218-88E4-989579C679F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService", "CustomerNotification\EmailService\EmailService.csproj", "{D4EE76BE-75AF-4372-A223-93AEA66BC569}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService", "CustomerNotification\EmailService\EmailService.csproj", "{D4EE76BE-75AF-4372-A223-93AEA66BC569}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{062FCC22-6709-416C-9B0F-8CE0744BE15C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,10 @@ Global
 		{D4EE76BE-75AF-4372-A223-93AEA66BC569}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4EE76BE-75AF-4372-A223-93AEA66BC569}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4EE76BE-75AF-4372-A223-93AEA66BC569}.Release|Any CPU.Build.0 = Release|Any CPU
+		{062FCC22-6709-416C-9B0F-8CE0744BE15C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{062FCC22-6709-416C-9B0F-8CE0744BE15C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{062FCC22-6709-416C-9B0F-8CE0744BE15C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{062FCC22-6709-416C-9B0F-8CE0744BE15C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
