@@ -26,7 +26,7 @@ namespace NotificationService
                 .ConfigureHostConfiguration(configHost =>
                 {
                     configHost.SetBasePath(Directory.GetCurrentDirectory());
-                    configHost.AddJsonFile("appsettings.json", optional: false);
+                    configHost.AddJsonFile($"appsettings.json", optional: false);
                     configHost.AddEnvironmentVariables();
                     configHost.AddCommandLine(args);
                 })
@@ -35,39 +35,38 @@ namespace NotificationService
                     config.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json",
                         optional: false);
                 })
-                .ConfigureServices((hostContext, services) =>
-                {
-                    var emailConfig = hostContext.Configuration
-                        .GetSection("EmailConfiguration")
-                        .Get<EmailConfig>();
 
-                    services.AddSingleton(emailConfig);
-                    services.AddScoped<IEmailSender, EmailSender>();
 
-                    services.AddMassTransit(c =>
-                    {
-                        c.AddConsumer<OrderProcessedEventConsumer>();
-                    });
-                    services.AddSingleton(provider => Bus.Factory.CreateUsingRabbitMq(config =>
-                    {
-                        config.Host("rabbitmq", "/", h =>
-                        {
-                            h.Username("guest");
-                            h.Password("guest");
-                        });
-
-                        config.ReceiveEndpoint(RabbitMqMassTransitConstants.NotificationServiceQueue, e =>
-                        {
-                            e.PrefetchCount = 16;
-                            e.UseMessageRetry(x => x.Interval(2, TimeSpan.FromSeconds(10)));
-                            e.Consumer<OrderProcessedEventConsumer>(provider);
-                        });
-                    }));
-
-                    services.AddSingleton<IHostedService, BusService>();
-                });
-
+               .ConfigureServices((hostContext, services) =>
+               {
+                   var emailConfig = hostContext.Configuration
+                   .GetSection("EmailConfiguration")
+                   .Get<EmailConfig>();
+                   services.AddSingleton(emailConfig);
+                   services.AddScoped<IEmailSender, EmailSender>();
+                   services.AddMassTransit(x =>
+                   {
+                       x.AddConsumer<OrderProcessedEventConsumer>();
+                       x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+                       {
+                           cfg.UseHealthCheck(provider);
+                           cfg.Host(new Uri("rabbitmq://rabbitmq"), h =>
+                           {
+                               h.Username("guest");
+                               h.Password("guest");
+                           });
+                           cfg.ReceiveEndpoint(RabbitMqMassTransitConstants.NotificationServiceQueue, ep =>
+                           {
+                               ep.PrefetchCount = 16;
+                               ep.UseMessageRetry(r => r.Interval(2, 100));
+                               ep.ConfigureConsumer<OrderProcessedEventConsumer>(provider);
+                           });
+                       }));
+                   });
+                   services.AddMassTransitHostedService();
+               });
             return hostBuilder;
+
         }
     }
 }

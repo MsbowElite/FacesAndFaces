@@ -1,70 +1,67 @@
-﻿@model List<Faces.WebMvc.ViewModels.OrderViewModel>
+﻿@model Faces.WebMvc.ViewModels.OrderListViewModel
 @{
 
-    ViewData["Title"] = "Orders List";
+
+    ViewData["Title"] = "Orders Overview";
 }
-<h3>Orders Management - overview</h3>
+<h3 id="PageTitle"> Orders management - overview</h3>
 <table class="table">
     <thead>
         <tr>
+
             <th>Order Id</th>
             <th>User Email</th>
             <th>Image</th>
             <th>Status</th>
         </tr>
+
     </thead>
     <tbody>
-        @foreach (var order in Model)
+        @foreach (var order in Model.Orders)
         {
-            <tr class="clickable" onclick="location.href='@(Url.Action("Details","OrderManagement",
-                                                          new { orderId =order.Id }))'">
+            <tr class="clickable" onclick="location.href='@(Url.Action("Details", "OrderManagement", new {orderId =order.Id}))'">
                 <td>@order.Id</td>
                 <td>@order.UserEmail</td>
-                <td><img src="@order.ImageString" width="50" height="50" /></td>
+                <td><img src="@order.ImageString" width="30" height="30" /></td>
                 <td>@order.Status</td>
-
-
             </tr>
         }
+
     </tbody>
 
 
 </table>
 @using Microsoft.Extensions.Options
 @using Faces.WebMvc.Configurations
-@inject IOptions<AppSettings> options
-
+@inject IOptions<AppSettings> settings
 @section Scripts{
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script type="text/javascript">
 
-        var timerId;
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl('@options.Value.OrdersApiUrl/orderhub')
-            .configureLogging(signalR.LogLevel.Debug)
-            .withAutomaticReconnect()
-            .build();
+         var timerId;
+         const connection = new signalR.HubConnectionBuilder()
+               .withUrl('@settings.Value.SignalRHubUrl/orderhub')
+             .configureLogging(signalR.LogLevel.Debug)
+             .withAutomaticReconnect()
+             .build();
 
-        connection.on('UpdateOrders', (message, orderId) => {
+         connection.on('UpdateOrders', (message, orderId) => {
 
-            const encodedMsg = message + ":" + orderId;
-            console.log(encodedMsg);
-            if (orderId && orderId.length) {
-                toastr.success(orderId + ' Updated to status' + message);
-                refreshPage();
-            }
-        });
+             const encodedMsg = message + ":" + orderId;
+             console.log(encodedMsg);
+             if (orderId && orderId.length) {
+                 toastr.success(orderId + ' Updated to status' + message);
+                 refreshPage();
+             }
+         });
 
-        function refreshPage() {
-            clearTimeout(timerId);
-            timerId = setTimeout(function () {
-                window.location.reload();
-            }, 1000)
-        };
+         function refreshPage() {
+             clearTimeout(timerId);
+             timerId = setTimeout(function () {
+                 window.location.reload();
+             }, 1000)
+         };
 
-        connection.start().catch(err => console.error(err.toString()));
-
+         connection.start().catch(err => console.error(err.toString()));
     </script>
-
-
 }

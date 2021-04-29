@@ -12,6 +12,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - OrdersApiUrl=http://ordersapi
+      - SignalRHubUrl=http://localhost:6002
     ports:
       - "5998:80"
 

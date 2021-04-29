@@ -1,4 +1,5 @@
 ﻿using Faces.WebMvc.RestClients;
+using Faces.WebMvc.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -17,14 +18,17 @@ namespace Faces.WebMvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var orders = await _orderManagementApi.GetOrders();
+            var orderListViewModel = new OrderListViewModel
+            {
+                Orders = await _orderManagementApi.GetOrders()
+            };
 
-            foreach (var order in orders)
+            foreach (var order in orderListViewModel.Orders)
             {
                 order.ImageString = ConvertAndFormatToString(order.ImageData);
             }
 
-            return View(orders);
+            return View(orderListViewModel);
         }
 
         [Route("/details/{orderId}")]

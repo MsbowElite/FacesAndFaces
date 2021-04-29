@@ -23,7 +23,7 @@ namespace OrdersApi.Messages.Consumers
         private readonly IHubContext<OrderHub> _orderHubContext;
         private readonly IOptions<OrderSettings> _options;
 
-        public RegisterOrderCommandConsumer(IOrderRepository orderRepository, IHttpClientFactory httpClientFactory, 
+        public RegisterOrderCommandConsumer(IOrderRepository orderRepository, IHttpClientFactory httpClientFactory,
             IHubContext<OrderHub> orderHubContext, IOptions<OrderSettings> options)
         {
             _orderRepository = orderRepository;
@@ -37,7 +37,7 @@ namespace OrdersApi.Messages.Consumers
             var result = context.Message;
 
             SaveOrder(result);
-            await _orderHubContext.Clients.All.SendAsync("UpdateOrders", "New Order Created", result.Id);
+            await _orderHubContext.Clients.All.SendAsync("UpdateOrders", "Order Created", result.Id);
 
             var client = _httpClientFactory.CreateClient();
             var orderDetailData = await GetFacesFromFaceApiAsync(client, result.ImageData, result.Id);
@@ -46,7 +46,7 @@ namespace OrdersApi.Messages.Consumers
 
             await SaveOrderDetailsAsync(orderId, faces);
 
-            await _orderHubContext.Clients.All.SendAsync("UpdateOrders", "Order processed", result.Id);
+            await _orderHubContext.Clients.All.SendAsync("UpdateOrders", "Order Processed", result.Id);
 
             await context.Publish<IOrderProcessedEvent>(new
             {
@@ -74,7 +74,6 @@ namespace OrdersApi.Messages.Consumers
             var order = await _orderRepository.GetOrderAsync(orderId);
 
             if (order is not null)
-            {
                 foreach (var face in faces)
                 {
                     var orderDetail = new OrderDetail
@@ -86,8 +85,8 @@ namespace OrdersApi.Messages.Consumers
                     order.OrderDetails.Add(orderDetail);
                 }
 
-                _orderRepository.UpdateOrder(order);
-            }
+            order.Status = Status.Processed.ToString();
+            _orderRepository.UpdateOrder(order);
         }
 
         private void SaveOrder(IRegisterOrderCommand result)

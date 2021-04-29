@@ -8,5 +8,6 @@ namespace Faces.WebMvc.Configurations
     public class AppSettings
     {
         public string OrdersApiUrl { get; set; }
+        public string SignalRHubUrl { get; set; }
     }
 }

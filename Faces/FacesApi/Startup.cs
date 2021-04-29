@@ -28,6 +28,7 @@ namespace FacesApi
             {
                 options.AllowSynchronousIO = true;
             });
+
             var config = new AzureFaceConfiguration();
             Configuration.Bind("AzureFaceCredentials", config);
             services.AddSingleton(config);

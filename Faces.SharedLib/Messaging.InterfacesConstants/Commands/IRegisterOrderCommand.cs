@@ -7,6 +7,6 @@ namespace Messaging.InterfacesConstants.Commands
         public Guid Id { get; set; }
         public string PictureUrl { get; set; }
         public string UserEmail { get; set; }
-        public Byte[] ImageData { get; set; }
+        public byte[] ImageData { get; set; }
     }
 }
